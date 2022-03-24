@@ -27,9 +27,19 @@ function App() {
         .then(res=>res.json())
         .then(data=>setProducts(data));
     },[])
-
-    const addToCart=product=>{
-      setCart([...cart,product]);
+  
+    const addToCart=selectdedProduct=>{
+      
+      let newCart=[];
+      
+      const checkId=cart.find(pd=> pd.id===selectdedProduct.id);
+      if(!checkId){
+        selectdedProduct['quantity']=1;
+        setCart([...cart,selectdedProduct]);
+      }else{
+        selectdedProduct['quantity']+=1;
+        
+      }
     }
 
     function openModal() {
@@ -40,7 +50,7 @@ function App() {
     }
   return (
     <div>
-     <Header cartButton={openModal} cartCount={cart}></Header>
+     <Header cartButton={openModal} cartCount={cart} ></Header>
      <Products 
      products={products}
      cartProduct={addToCart}
@@ -51,10 +61,14 @@ function App() {
         onRequestClose={closeModal}
         style={customStyles}
       >
+        <button onClick={closeModal}>close</button>
         {
-          cart.map(pd=> <h2 key={pd.id}>{pd.name}</h2> )
+          cart.map(pd=> <div>
+            <h2 key={pd.id}>{pd.name} <sup>{pd.quantity}</sup></h2>
+            </div> )
         
         }
+       
         </Modal>
     </div>
 
